@@ -1,0 +1,60 @@
+#include <stdio.h>
+#include <stdlib.h>
+#define N 7 //环中人的个数
+
+typedef struct LNode
+{
+    int keyword;
+    int num;
+    struct LNode * next;
+}LNode,*LinkList;
+
+void Joseph(LinkList p,int m,int x)
+{
+    LinkList q;
+    int i;
+    if(x==0)return 0;
+    q=p;
+    m%=x;
+    if(m==0)m=x;
+    for(i=1;i<=m;++i)
+    {
+        p=q;
+        q=p->next;
+    }
+    p->next=q->next;
+    i=q->keyword;
+    printf("%d ",q->num);
+    free(q);
+    Joseph(p,i,x-1);
+}
+
+int main()
+{
+    int KeyW[N];
+    int i,m;
+    printf("分别输入7个人的密码");
+    for(i=0;i<N;i++)
+    scanf("%d",&KeyW[i]);
+
+    LinkList Lhead,p,q;
+    Lhead=(LinkList)malloc(sizeof(LNode));
+    if(!Lhead)return 0;
+    Lhead->keyword=KeyW[0];
+    Lhead->num=1;
+    Lhead->next=NULL;
+    p=Lhead;
+    for(i=1;i<N;++i)
+    {
+        if(!(q=(LinkList)malloc(sizeof(LNode)))) return 0;
+        q->keyword=KeyW[i];
+        q->num=i+1;
+        p->next=q;
+        p=q;
+    }
+    p->next=Lhead;
+    printf("请输入第一次计数值m (m<=20):\n");
+    scanf("%d",&m);
+    printf("输出的队列是：\n");
+    Joseph(p,m,N);
+}
